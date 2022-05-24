@@ -1,7 +1,7 @@
 # Kodi Media Center language file
-# Addon Name: Fan Shim Manager 
-# Addon id: service.fanshim
-# Addon Provider: jane_t
+# Addon Name: Fan Control 
+# Addon id: service.fancontrol
+# Addon Provider: bambury
 msgid ""
 msgstr ""
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
@@ -15,7 +15,7 @@ msgstr ""
 #settings labels
 
 msgctxt "#30000"
-msgid "Fan Shim Manager"
+msgid "Fan Control"
 ""
 
 msgctxt "#30001"
@@ -28,10 +28,6 @@ msgid "Temperature threshold in degrees C to disable fan"
 
 msgctxt "#30003"
 msgid "Delay, in seconds, between temperature readings"
-""
-
-msgctxt "#30004"
-msgid "Disable LED control"
 ""
 
 msgctxt "#30005"
