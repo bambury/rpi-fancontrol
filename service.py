@@ -29,8 +29,8 @@ msgdialogprogress = xbmcgui.DialogProgress()
 
 addon_id = 'service.fancontrol'
 selfAddon = xbmcaddon.Addon(addon_id)
-datapath = xbmc.translatePath(selfAddon.getAddonInfo('profile'))
-addonfolder = xbmc.translatePath(selfAddon.getAddonInfo('path'))
+datapath = xbmcvfs.translatePath(selfAddon.getAddonInfo('profile'))
+addonfolder = xbmcvfs.translatePath(selfAddon.getAddonInfo('path'))
 
 FAN = 14
 
