@@ -1,3 +1,4 @@
+
 #!/usr/bin/env python
 #
 # Based on:
@@ -23,9 +24,14 @@ import xbmcaddon
 import xbmcvfs
 
 sys.path.append('/storage/.kodi/addons/virtual.rpi-tools/lib')
-import RPi.GPIO as GPIO
+# import RPi.GPIO as GPIO
+# import lgpio
+from gpiozero.pins.native import NativeFactory
+from gpiozero import LED
 
 msgdialogprogress = xbmcgui.DialogProgress()
+
+my_factory = NativeFactory()
 
 addon_id = 'service.fancontrol'
 selfAddon = xbmcaddon.Addon(addon_id)
@@ -36,7 +42,11 @@ FAN = 14
 
 fan_enabled = False
 
-debug_mode = selfAddon.getSetting('debug_mode') == 'true'
+led = LED(FAN, pin_factory=my_factory)
+
+
+#debug_mode = selfAddon.getSetting('debug_mode') == 'true'
+debug_mode = True
 on_threshold = int(selfAddon.getSetting('fan_on_temp'))
 off_threshold  =  int(selfAddon.getSetting('fan_off_temp'))
 delay =  int(selfAddon.getSetting('delay'))
@@ -47,22 +57,29 @@ xbmc.log("Fan On :" + str(on_threshold) + " Off " + str(off_threshold),level=xbm
 xbmc.log("Delay :" + str(delay) + " Hide Led: " + str(noled) + " Debug : " + str(debug_mode),level=xbmc.LOGINFO)
 
 def init():
-    # For FAN
-    GPIO.setwarnings(False)
-    GPIO.setmode(GPIO.BCM)
-    GPIO.setup(FAN, GPIO.OUT)
-    GPIO.output(FAN, False)
-    return()
+  # For FAN
+  #  GPIO.setwarnings(False)
+  #  GPIO.setmode(GPIO.BCM)
+  #  GPIO.setup(FAN, GPIO.OUT)
+  #  GPIO.output(FAN, False)
+  led.off()
+  return()
 
 def _exit():
-    GPIO.cleanup()
+    # GPIO.cleanup()
+    led.close()
 
 def set_fan(status):
     global fan_enabled
+    global led
     changed = False
     if status != fan_enabled:
         changed = True
-    GPIO.output(FAN, status)
+    if status == True:
+        led.on()
+    else:
+        led.off()
+    # GPIO.output(FAN, status)
     fan_enabled = status
     return changed
 
@@ -74,9 +91,11 @@ def watch_temp():
         xbmc.log("Fan Status: " + str(fan_enabled) + " temp:" + str(cpu_temp) + " Freq " + str(f) + " %=",level=xbmc.LOGINFO)
 
     if fan_enabled == False and cpu_temp >= on_threshold:
+    # if cpu_temp >= on_threshold:
          xbmc.log(str(cpu_temp) + "Enabling fan!" + " temp:" + str(cpu_temp),level=xbmc.LOGINFO)
          set_fan(True)
     if fan_enabled == True and cpu_temp <= off_threshold:
+    # if cpu_temp <= off_threshold:
          xbmc.log(str(cpu_temp) + " Disabling fan!" + " temp:" + str(cpu_temp),level=xbmc.LOGINFO)
          set_fan(False)
     return();
